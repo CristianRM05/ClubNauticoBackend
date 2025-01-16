@@ -5,13 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BarcoRequest {
+public class TripRequest {
 
-    private String name;
-    private String model ;
-    private int fee;
+    private Date fechayHora;
+    private String description;
+
+
 }

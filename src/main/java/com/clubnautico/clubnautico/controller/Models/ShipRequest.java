@@ -1,17 +1,19 @@
 package com.clubnautico.clubnautico.controller.Models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShiRsponse {
-    private Long id;
+public class ShipRequest {
+
     private String name;
     private String matricula;
     private int amarre;
     private double fee;
-    private Long propietarioId;
+
 }

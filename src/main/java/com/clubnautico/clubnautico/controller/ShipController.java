@@ -1,7 +1,7 @@
 package com.clubnautico.clubnautico.controller;
 
 import com.clubnautico.clubnautico.Service.ShipService;
-import com.clubnautico.clubnautico.controller.Models.BarcoRequest;
+import com.clubnautico.clubnautico.controller.Models.ShipRequest;
 import com.clubnautico.clubnautico.controller.Models.ShiRsponse;
 import com.clubnautico.clubnautico.entity.Ship;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class ShipController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Ship> createBarco(@RequestBody BarcoRequest barcoRequest) {
+    public ResponseEntity<Ship> createBarco(@RequestBody ShipRequest barcoRequest) {
         return ResponseEntity.ok(barcoService.createBarco(barcoRequest));
     }
 

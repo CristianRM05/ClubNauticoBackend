@@ -1,14 +1,14 @@
 package com.clubnautico.clubnautico.Service;
 
 import com.clubnautico.clubnautico.Exception.NotFound;
-import com.clubnautico.clubnautico.controller.Models.BarcoRequest;
+import com.clubnautico.clubnautico.controller.Models.ShipRequest;
 
 import com.clubnautico.clubnautico.controller.Models.ShiRsponse;
 import com.clubnautico.clubnautico.entity.Ship;
 import com.clubnautico.clubnautico.entity.User;
 
 import com.clubnautico.clubnautico.repository.ShipRepository;
-import com.clubnautico.clubnautico.repository.userRepository;
+import com.clubnautico.clubnautico.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ShipService {
 
     private final ShipRepository barcoRepository;
-    private final userRepository userRepository;
+    private final UserRepository userRepository;
 
     private User getAuthenticatedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -38,7 +38,8 @@ public class ShipService {
                 .map(barco -> new ShiRsponse(
                         barco.getId(),
                         barco.getName(),
-                        barco.getModel(),
+                        barco.getMatricula(),
+                        barco.getAmarre(),
                         barco.getFee(),
                         barco.getPropietario().getId()
                 ))
@@ -46,12 +47,13 @@ public class ShipService {
     }
 
 
-    public Ship createBarco(BarcoRequest barcoRequest) {
+    public Ship createBarco(ShipRequest barcoRequest) {
         User propietario = getAuthenticatedUser();
 
         Ship barco = Ship.builder()
                 .name(barcoRequest.getName())
-                .model(barcoRequest.getModel())
+                .matricula(barcoRequest.getMatricula())
+                .amarre(barcoRequest.getAmarre())
                 .fee(barcoRequest.getFee())
                 .propietario(propietario)
                 .build();
@@ -62,7 +64,7 @@ public class ShipService {
     public void deleteBarco(Long id) {
         User propietario = getAuthenticatedUser();
         Ship barco = barcoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Barco no encontrado con ID: " + id));
+                .orElseThrow(() -> new NotFound("Barco no encontrado con ID: " + id));
 
         if (!barco.getPropietario().equals(propietario)) {
             throw new RuntimeException("No tienes permiso para eliminar este barco.");

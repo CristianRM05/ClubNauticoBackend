@@ -5,7 +5,7 @@ import com.clubnautico.clubnautico.controller.Models.AuthResponse;
 import com.clubnautico.clubnautico.controller.Models.AuthenticateRequest;
 import com.clubnautico.clubnautico.controller.Models.RegisterRequest;
 import com.clubnautico.clubnautico.entity.User;
-import com.clubnautico.clubnautico.repository.userRepository;
+import com.clubnautico.clubnautico.repository.UserRepository;
 import com.clubnautico.clubnautico.Exception.NotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AauthService {
 
-    private final userRepository repository;
+    private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;

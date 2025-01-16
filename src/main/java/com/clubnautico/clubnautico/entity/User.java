@@ -29,7 +29,6 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.ORDINAL)
     private Role role;
-
     private boolean esPatron;
 
     @Override
