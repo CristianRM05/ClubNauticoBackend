@@ -22,4 +22,8 @@ public class Trip {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizadorId", nullable = false)
     private User organizadorId; // Id usuario organizador
+
+
+    @Enumerated(EnumType.ORDINAL)
+    private TripRole tripRole;
 }

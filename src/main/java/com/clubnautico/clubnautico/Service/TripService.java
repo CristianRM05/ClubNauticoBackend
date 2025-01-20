@@ -3,7 +3,9 @@ package com.clubnautico.clubnautico.Service;
 import com.clubnautico.clubnautico.Exception.NotFound;
 import com.clubnautico.clubnautico.controller.Models.TripRequest;
 import com.clubnautico.clubnautico.controller.Models.TripResponse;
+import com.clubnautico.clubnautico.entity.Role;
 import com.clubnautico.clubnautico.entity.Trip;
+import com.clubnautico.clubnautico.entity.TripRole;
 import com.clubnautico.clubnautico.entity.User;
 
 import com.clubnautico.clubnautico.repository.TripRepository;
@@ -37,20 +39,26 @@ public class TripService {
 
     @Transactional
     public TripResponse createTrip(TripRequest request) {
+        User usuarioActual = getAuthenticateUser();
 
-        User organizador = getAuthenticateUser();
+        if (usuarioActual.getRole() != Role.MEMBER) {
+            throw new RuntimeException("Solo los miembros pueden crear viajes");
+        }
 
-
-
-        Trip trip = new Trip();
-        trip.setFechayHora(request.getFechayHora());
-        trip.setDescripcion(request.getDescription());
-        trip.setOrganizadorId(organizador);
+        Trip trip = Trip.builder()
+                .fechayHora(request.getFechayHora())
+                .descripcion(request.getDescription())
+                .organizadorId(usuarioActual)
+                .tripRole(TripRole.PENDING) // Estado inicial
+                .build();
 
         Trip savedTrip = tripRepository.save(trip);
 
         return toResponse(savedTrip);
     }
+
+
+
 
     public List<TripResponse> getAllTrips() {
         return tripRepository.findAll().stream()
@@ -95,6 +103,7 @@ public class TripService {
         response.setFechayHora(trip.getFechayHora());
         response.setDescription(trip.getDescripcion());
         response.setOrganizadorName(trip.getOrganizadorId().getName()); // Suponiendo que User tiene un campo "nombre"
+       response.setTripRole(trip.getTripRole());
         return response;
     }
 

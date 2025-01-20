@@ -1,5 +1,6 @@
 package com.clubnautico.clubnautico.controller.Models;
 
+import com.clubnautico.clubnautico.entity.TripRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,6 @@ public class TripResponse {
     private Date fechayHora;
     private String description;
     private String organizadorName;
+    private TripRole tripRole;
 
 }
