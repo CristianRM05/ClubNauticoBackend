@@ -76,10 +76,10 @@ public class TripService {
     public TripResponse updateTrip(Long id, TripRequest request) {
         User organizador = getAuthenticateUser();
         Trip trip = tripRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Trip no encontrado"));
+                .orElseThrow(() -> new NotFound("Trip no encontrado"));
 
          organizador = userRepository.findById(organizador.getId())
-                .orElseThrow(() -> new RuntimeException("Organizador no encontrado"));
+                .orElseThrow(() -> new NotFound("Organizador no encontrado"));
 
         trip.setFechayHora(request.getFechayHora());
         trip.setDescripcion(request.getDescription());

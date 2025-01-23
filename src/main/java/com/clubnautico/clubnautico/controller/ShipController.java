@@ -27,7 +27,7 @@ public class ShipController {
         return ResponseEntity.ok(barcoService.createBarco(barcoRequest));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/borrar/{id}")
     public ResponseEntity<Void> deleteBarco(@PathVariable Long id) {
         barcoService.deleteBarco(id);
         return ResponseEntity.noContent().build();
