@@ -5,11 +5,14 @@ import com.clubnautico.clubnautico.Service.AauthService;
 import com.clubnautico.clubnautico.controller.Models.AuthResponse;
 import com.clubnautico.clubnautico.controller.Models.AuthenticateRequest;
 import com.clubnautico.clubnautico.controller.Models.RegisterRequest;
+import com.clubnautico.clubnautico.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -21,7 +24,8 @@ public class AuthController {
  private AauthService authService;
     @Autowired
     private final JwtService jwtService;
-@PostMapping("/register")
+
+    @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.register(request));
     }
@@ -41,4 +45,15 @@ public class AuthController {
             return ResponseEntity.ok(false);
         }
     }
+
+    @GetMapping("/user")
+    public ResponseEntity<User> getAuthenticatedUser(HttpServletRequest request) {
+        User user = authService.getAuthenticatedUser(); // Obtén el usuario desde el servicio
+        return ResponseEntity.ok(user); // Devuelve el usuario completo
+    }
+
+
+
+
+
 }
