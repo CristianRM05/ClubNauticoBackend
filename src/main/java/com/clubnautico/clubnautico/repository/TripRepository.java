@@ -1,6 +1,7 @@
 package com.clubnautico.clubnautico.repository;
 
 import com.clubnautico.clubnautico.entity.Trip;
+import com.clubnautico.clubnautico.entity.TripRole;
 import com.clubnautico.clubnautico.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,6 +11,7 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
 
     List<Trip> findAllByOrganizadorId(User organizadorId);
     List<Trip> findByOrganizadorId(User organizador);
-
+    List<Trip> findByBarcoId(Long barcoId);
+    List<Trip> findByTripRole(TripRole tripRole);
 
 }

@@ -32,4 +32,9 @@ public class ShipController {
         barcoService.deleteBarco(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Ship> updateBarco(@PathVariable Long id, @RequestBody ShipRequest barcoRequest) {
+        return ResponseEntity.ok(barcoService.updateBarco(id, barcoRequest));
+    }
+
 }

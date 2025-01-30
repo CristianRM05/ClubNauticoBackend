@@ -23,7 +23,7 @@ public class Trip {
     @JoinColumn(name = "organizadorId", nullable = false)
     private User organizadorId; // Id usuario organizador
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // Eliminación en cascada de los viajes cuando se elimina el barco
     @JoinColumn(name = "barcoId", nullable = false)
     private Ship barco; // Barco asignado al viaje
 

@@ -1,10 +1,13 @@
 package com.clubnautico.clubnautico.controller;
 
 
+import com.clubnautico.clubnautico.Exception.NotFound;
 import com.clubnautico.clubnautico.Service.TripService;
 import com.clubnautico.clubnautico.controller.Models.TripRequest;
 import com.clubnautico.clubnautico.controller.Models.TripResponse;
+import com.clubnautico.clubnautico.entity.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,18 +31,12 @@ public class TripController {
         List<TripResponse> trips = tripService.getAllTrips();
         return ResponseEntity.ok(trips);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<TripResponse> getTripById(@PathVariable Long id) {
-        TripResponse response = tripService.getTripById(id);
-        return ResponseEntity.ok(response);
+    @GetMapping("/obtener/{id}")
+    public TripResponse getTripById(@PathVariable Long id) {
+        Trip trip = tripService.getTripById(id); // Método en el servicio que obtiene el viaje por ID
+        return tripService.toResponse(trip);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TripResponse> updateTrip(@PathVariable Long id, @RequestBody TripRequest request) {
-        TripResponse response = tripService.updateTrip(id, request);
-        return ResponseEntity.ok(response);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTrip(@PathVariable Long id) {

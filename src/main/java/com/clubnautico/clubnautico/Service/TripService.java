@@ -72,8 +72,6 @@ public class TripService {
     }
 
 
-
-
     public List<TripResponse> getAllTrips() {
         User usuarioActual = getAuthenticateUser(); // Obtener usuario autenticado
 
@@ -83,28 +81,20 @@ public class TripService {
     }
 
 
-    public TripResponse getTripById(Long id) {
-        Trip trip = tripRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Trip no encontrado"));
+    public TripResponse getALL() {
+        TripRole role = TripRole.PENDING;
+        Trip trip = (Trip) tripRepository.findByTripRole(role);
+
+
         return toResponse(trip);
     }
 
-    @Transactional
-    public TripResponse updateTrip(Long id, TripRequest request) {
-        User organizador = getAuthenticateUser();
-        Trip trip = tripRepository.findById(id)
-                .orElseThrow(() -> new NotFound("Trip no encontrado"));
-
-         organizador = userRepository.findById(organizador.getId())
-                .orElseThrow(() -> new NotFound("Organizador no encontrado"));
-
-        trip.setFechayHora(request.getFechayHora());
-        trip.setDescripcion(request.getDescription());
-        trip.setOrganizadorId(organizador);
-
-        Trip updatedTrip = tripRepository.save(trip);
-        return toResponse(updatedTrip);
+    public Trip getTripById(Long id) {
+        return tripRepository.findById(id)
+                .orElseThrow(() -> new NotFound("Viaje no encontrado con ID: " + id));
     }
+
+
 
     @Transactional
     public void deleteTrip(Long id) {
@@ -114,7 +104,7 @@ public class TripService {
         tripRepository.deleteById(id);
     }
 
-    private TripResponse toResponse(Trip trip) {
+    public TripResponse toResponse(Trip trip) {
         TripResponse response = new TripResponse();
         response.setIdTrip(trip.getIdTrip());
         response.setFechayHora(trip.getFechayHora());
