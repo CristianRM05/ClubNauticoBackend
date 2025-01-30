@@ -4,6 +4,7 @@ import com.clubnautico.clubnautico.Exception.NotFound;
 import com.clubnautico.clubnautico.controller.Models.ShipRequest;
 
 import com.clubnautico.clubnautico.controller.Models.ShiRsponse;
+import com.clubnautico.clubnautico.entity.Role;
 import com.clubnautico.clubnautico.entity.Ship;
 import com.clubnautico.clubnautico.entity.User;
 
@@ -47,7 +48,9 @@ public class ShipService {
 
     public Ship createBarco(ShipRequest barcoRequest) {
         User propietario = getAuthenticatedUser();
-
+        if (propietario.getRole() != Role.MEMBER) {
+            throw new NotFound("Solo los miembros pueden crear barcos");
+        }
         Ship barco = Ship.builder()
                 .name(barcoRequest.getName())
                 .matricula(barcoRequest.getMatricula())

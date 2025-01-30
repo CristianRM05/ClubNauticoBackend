@@ -43,9 +43,8 @@ public class TripService {
         User usuarioActual = getAuthenticateUser();
 
         if (usuarioActual.getRole() != Role.MEMBER) {
-            throw new RuntimeException("Solo los miembros pueden crear viajes");
+            throw new NotFound("Solo los miembros pueden crear viajes");
         }
-
         Ship barco = shipRepository.findById(request.getShipId())
                 .orElseThrow(() -> new NotFound("Barco no encontrado"));
 
@@ -71,8 +70,6 @@ public class TripService {
         Trip savedTrip = tripRepository.save(trip);
         return toResponse(savedTrip);
     }
-
-
 
 
 
