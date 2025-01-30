@@ -13,5 +13,5 @@ public interface AauthService {
 
     AuthResponse authenticate (AuthenticateRequest authenticateRequest);
 
-    User getAuthenticatedUser();
+
 }

@@ -17,5 +17,8 @@ public class TripResponse {
     private String description;
     private String organizadorName;
     private TripRole tripRole;
+    private Long barcoId;
+    private String patronName; // Nombre del patrón
+    private Long patronId;
 
 }

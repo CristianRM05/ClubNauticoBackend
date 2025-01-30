@@ -3,11 +3,9 @@ package com.clubnautico.clubnautico.Service;
 import com.clubnautico.clubnautico.Exception.NotFound;
 import com.clubnautico.clubnautico.controller.Models.TripRequest;
 import com.clubnautico.clubnautico.controller.Models.TripResponse;
-import com.clubnautico.clubnautico.entity.Role;
-import com.clubnautico.clubnautico.entity.Trip;
-import com.clubnautico.clubnautico.entity.TripRole;
-import com.clubnautico.clubnautico.entity.User;
+import com.clubnautico.clubnautico.entity.*;
 
+import com.clubnautico.clubnautico.repository.ShipRepository;
 import com.clubnautico.clubnautico.repository.TripRepository;
 
 import com.clubnautico.clubnautico.repository.UserRepository;
@@ -29,6 +27,9 @@ public class TripService {
 @Autowired
   private UserRepository userRepository;
 
+    @Autowired
+    private ShipRepository shipRepository;
+
     private User getAuthenticateUser(){
         String username = SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -45,26 +46,45 @@ public class TripService {
             throw new RuntimeException("Solo los miembros pueden crear viajes");
         }
 
+        Ship barco = shipRepository.findById(request.getShipId())
+                .orElseThrow(() -> new NotFound("Barco no encontrado"));
+
+        User patron = null;
+        if (request.getPatronId() != null) { // Solo buscamos si el ID no es null
+            patron = userRepository.findById(request.getPatronId())
+                    .orElseThrow(() -> new NotFound("Patrón no encontrado"));
+
+            if (!patron.isEsPatron()) { // Validamos que sea un patrón
+                throw new RuntimeException("El usuario seleccionado no es un patrón");
+            }
+        }
+
         Trip trip = Trip.builder()
                 .fechayHora(request.getFechayHora())
                 .descripcion(request.getDescription())
                 .organizadorId(usuarioActual)
-                .tripRole(TripRole.PENDING) // Estado inicial
+                .barco(barco)
+                .patron(patron) // Puede ser null
+                .tripRole(TripRole.PENDING)
                 .build();
 
         Trip savedTrip = tripRepository.save(trip);
-
         return toResponse(savedTrip);
     }
 
 
 
 
+
+
     public List<TripResponse> getAllTrips() {
-        return tripRepository.findAll().stream()
+        User usuarioActual = getAuthenticateUser(); // Obtener usuario autenticado
+
+        return tripRepository.findByOrganizadorId(usuarioActual).stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
     }
+
 
     public TripResponse getTripById(Long id) {
         Trip trip = tripRepository.findById(id)
@@ -102,10 +122,23 @@ public class TripService {
         response.setIdTrip(trip.getIdTrip());
         response.setFechayHora(trip.getFechayHora());
         response.setDescription(trip.getDescripcion());
-        response.setOrganizadorName(trip.getOrganizadorId().getName()); // Suponiendo que User tiene un campo "nombre"
-       response.setTripRole(trip.getTripRole());
+        response.setOrganizadorName(trip.getOrganizadorId().getName());
+        response.setTripRole(trip.getTripRole());
+        response.setBarcoId(trip.getBarco().getId());
+
+        if (trip.getPatron() != null) {
+            response.setPatronId(trip.getPatron().getId());
+            response.setPatronName(trip.getPatron().getName());
+        } else {
+            response.setPatronId(null);
+            response.setPatronName("Sin asignar");
+        }
+
         return response;
     }
+
+
+
 
 
 }

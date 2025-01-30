@@ -60,11 +60,6 @@ public class AuthServiceImpl implements AauthService {
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder().token(jwtToken).build();
     }
-@Override
-public User getAuthenticatedUser() {
-    // Lógica para obtener el usuario autenticado
-    return repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-            .orElseThrow(() -> new NotFound("Usuario no encontrado"));
-}
+
 
 }

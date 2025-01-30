@@ -15,6 +15,8 @@ public class TripRequest {
 
     private Date fechayHora;
     private String description;
+    private Long shipId;
+    private Long patronId;
 
 
 }

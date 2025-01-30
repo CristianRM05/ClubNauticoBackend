@@ -23,6 +23,13 @@ public class Trip {
     @JoinColumn(name = "organizadorId", nullable = false)
     private User organizadorId; // Id usuario organizador
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "barcoId", nullable = false)
+    private Ship barco; // Barco asignado al viaje
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patronId", nullable = true)
+    private User patron;
 
     @Enumerated(EnumType.ORDINAL)
     private TripRole tripRole;

@@ -9,5 +9,7 @@ import java.util.List;
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
     List<Trip> findAllByOrganizadorId(User organizadorId);
+    List<Trip> findByOrganizadorId(User organizador);
+
 
 }

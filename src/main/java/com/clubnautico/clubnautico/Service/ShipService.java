@@ -30,9 +30,7 @@ public class ShipService {
     }
 
     public List<ShiRsponse> getUserBarcos() {
-        // Obtén el usuario autenticado
         User propietario = getAuthenticatedUser();
-
         List<Ship> barcos = barcoRepository.findByPropietarioId(propietario.getId());
         return barcos.stream()
                 .map(barco -> new ShiRsponse(

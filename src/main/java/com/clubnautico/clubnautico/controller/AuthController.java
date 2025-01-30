@@ -20,8 +20,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @CrossOrigin("http://localhost:4200")
 public class AuthController {
-@Autowired
- private AauthService authService;
+    @Autowired
+    private AauthService authService;
     @Autowired
     private final JwtService jwtService;
 
@@ -38,7 +38,6 @@ public class AuthController {
     public ResponseEntity<Boolean> validateToken(@RequestBody Map<String, String> request) {
         String token = request.get("token");
         try {
-            // Verifica si el token no ha expirado
             boolean isValid = !jwtService.isTokenExpired(token);
             return ResponseEntity.ok(isValid);
         } catch (Exception e) {
@@ -46,11 +45,6 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<User> getAuthenticatedUser(HttpServletRequest request) {
-        User user = authService.getAuthenticatedUser(); // Obtén el usuario desde el servicio
-        return ResponseEntity.ok(user); // Devuelve el usuario completo
-    }
 
 
 
