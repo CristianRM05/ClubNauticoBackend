@@ -136,9 +136,10 @@ public class TripService {
                 .orElseThrow(() -> new GlobalEcxception("Viaje no encontrado con ID: " + id));
 
         if (trip.getTripRole() == TripRole.FINISHED) {
-            throw new RuntimeException("El viaje ya ha sido finalizado y no puede ser actualizado.");
+            throw new GlobalEcxception("El viaje ya ha sido finalizado y no puede ser actualizado.");
         }
 
+        // Actualizar los campos permitidos
         trip.setFechayHora(request.getFechayHora());
         trip.setDescripcion(request.getDescription());
 
@@ -147,6 +148,8 @@ public class TripService {
                     .orElseThrow(() -> new GlobalEcxception("Barco no encontrado"));
             trip.setBarco(barco);
         }
+
+        // Guardar los cambios
         Trip updatedTrip = tripRepository.save(trip);
 
         return toResponse(updatedTrip);

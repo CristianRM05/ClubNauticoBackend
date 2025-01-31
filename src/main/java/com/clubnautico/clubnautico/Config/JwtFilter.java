@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // Verifica que el header Authorization esté presente y comience con "Bearer"
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7); // Extrae el token JWT (después de "Bearer ")
-            username = jwtService.getUserName(jwt); // Obtén el nombre de usuario del token
+            username = jwtService.getUserName(jwt);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // Carga los detalles del usuario desde el servicio de usuarios
@@ -51,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        // Continúa con la cadena de filtros, sin importar si el JWT es válido o no
+
         filterChain.doFilter(request, response);
     }
 }

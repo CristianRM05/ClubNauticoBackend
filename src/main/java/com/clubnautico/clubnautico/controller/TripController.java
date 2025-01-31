@@ -1,6 +1,5 @@
 package com.clubnautico.clubnautico.controller;
 
-
 import com.clubnautico.clubnautico.Service.TripService;
 import com.clubnautico.clubnautico.controller.Models.TripRequest;
 import com.clubnautico.clubnautico.controller.Models.TripResponse;
@@ -45,7 +44,6 @@ public class TripController {
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TripResponse updateTrip(@PathVariable Long id, @RequestBody TripRequest request) {
-        // Llamamos al servicio para actualizar el viaje
         return tripService.updateTrip(id, request);
     }
 
