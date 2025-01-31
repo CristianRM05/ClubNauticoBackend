@@ -6,13 +6,11 @@ import com.clubnautico.clubnautico.controller.Models.AuthenticateRequest;
 import com.clubnautico.clubnautico.controller.Models.RegisterRequest;
 import com.clubnautico.clubnautico.entity.User;
 import com.clubnautico.clubnautico.repository.UserRepository;
-import com.clubnautico.clubnautico.Exception.NotFound;
+import com.clubnautico.clubnautico.Exception.GlobalEcxception;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,7 +29,7 @@ public class AuthServiceImpl implements AauthService {
     public AuthResponse register(RegisterRequest request) {
         var existingUser = repository.findByUsername(request.getUsername());
         if (existingUser.isPresent()) {
-            throw new NotFound("El nombre de usuario ya está en uso");
+            throw new GlobalEcxception("El nombre de usuario ya está en uso");
         }
 
         var user = User.builder()

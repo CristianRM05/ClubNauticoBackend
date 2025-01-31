@@ -1,6 +1,6 @@
 package com.clubnautico.clubnautico.Service;
 
-import com.clubnautico.clubnautico.Exception.NotFound;
+import com.clubnautico.clubnautico.Exception.GlobalEcxception;
 import com.clubnautico.clubnautico.controller.Models.ShipRequest;
 
 import com.clubnautico.clubnautico.controller.Models.ShiRsponse;
@@ -31,7 +31,7 @@ public class ShipService {
     private User getAuthenticatedUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFound("Usuario no encontrado: " + username));
+                .orElseThrow(() -> new GlobalEcxception("Usuario no encontrado: " + username));
     }
 
     public List<ShiRsponse> getUserBarcos() {
@@ -52,7 +52,7 @@ public class ShipService {
     public Ship createBarco(ShipRequest barcoRequest) {
         User propietario = getAuthenticatedUser();
         if (propietario.getRole() != Role.MEMBER) {
-            throw new NotFound("Solo los miembros pueden crear barcos");
+            throw new GlobalEcxception("Solo los miembros pueden crear barcos");
         }
         Ship barco = Ship.builder()
                 .name(barcoRequest.getName())
@@ -69,7 +69,7 @@ public class ShipService {
     public void deleteBarco(Long id) {
         User propietario = getAuthenticatedUser();
         Ship barco = barcoRepository.findById(id)
-                .orElseThrow(() -> new NotFound("Barco no encontrado con ID: " + id));
+                .orElseThrow(() -> new GlobalEcxception("Barco no encontrado con ID: " + id));
 
         if (!barco.getPropietario().equals(propietario)) {
             throw new RuntimeException("No tienes permiso para eliminar este barco.");
@@ -95,7 +95,7 @@ public class ShipService {
     public Ship updateBarco(Long id, ShipRequest barcoRequest) {
         User propietario = getAuthenticatedUser();
         Ship barco = barcoRepository.findById(id)
-                .orElseThrow(() -> new NotFound("Barco no encontrado con ID: " + id));
+                .orElseThrow(() -> new GlobalEcxception("Barco no encontrado con ID: " + id));
         barco.setName(barcoRequest.getName());
         barco.setMatricula(barcoRequest.getMatricula());
 

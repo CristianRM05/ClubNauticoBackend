@@ -1,6 +1,6 @@
 package com.clubnautico.clubnautico.Service;
 
-import com.clubnautico.clubnautico.Exception.NotFound;
+import com.clubnautico.clubnautico.Exception.GlobalEcxception;
 import com.clubnautico.clubnautico.controller.Models.UserResponse;
 import com.clubnautico.clubnautico.entity.User;
 import com.clubnautico.clubnautico.repository.UserRepository;
@@ -15,9 +15,8 @@ public class UserService {
     private final UserRepository repository;
 
     public UserResponse getAuthenticatedUser() {
-        // Obtener usuario autenticado
         User user = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new NotFound("Usuario no encontrado"));
+                .orElseThrow(() -> new GlobalEcxception("Usuario no encontrado"));
 
         return new UserResponse(
                 user.getName(),
@@ -28,11 +27,18 @@ public class UserService {
         );
     }
 
-
     @Transactional
     public UserResponse updateAuthenticatedUser(UserResponse updatedUser) {
-        User user = repository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
-                .orElseThrow(() -> new NotFound("Usuario no encontrado"));
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = repository.findByUsername(currentUsername)
+                .orElseThrow(() -> new GlobalEcxception("Usuario no encontrado"));
+
+        if (!user.getUsername().equals(updatedUser.getUsername()) &&
+                repository.findByUsername(updatedUser.getUsername()).isPresent()) {
+            throw new GlobalEcxception("El nombre de usuario ya está en uso");
+        }
+
         user.setName(updatedUser.getName());
         user.setLastname(updatedUser.getLastname());
         user.setUsername(updatedUser.getUsername());

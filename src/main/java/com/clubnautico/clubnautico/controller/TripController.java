@@ -1,7 +1,6 @@
 package com.clubnautico.clubnautico.controller;
 
 
-import com.clubnautico.clubnautico.Exception.NotFound;
 import com.clubnautico.clubnautico.Service.TripService;
 import com.clubnautico.clubnautico.controller.Models.TripRequest;
 import com.clubnautico.clubnautico.controller.Models.TripResponse;
@@ -37,11 +36,17 @@ public class TripController {
         return tripService.toResponse(trip);
     }
 
-
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTrip(@PathVariable Long id) {
         tripService.deleteTrip(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/update/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TripResponse updateTrip(@PathVariable Long id, @RequestBody TripRequest request) {
+        // Llamamos al servicio para actualizar el viaje
+        return tripService.updateTrip(id, request);
     }
 
 }

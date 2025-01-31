@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NotFound.class)
-    public ResponseEntity<String> handleUsernameAlreadyExists(NotFound ex) {
+    @ExceptionHandler(GlobalEcxception.class)
+    public ResponseEntity<String> handleUsernameAlreadyExists(GlobalEcxception ex) {
         // Retorna el mensaje de la excepción en el cuerpo de la respuesta con el código HTTP 400 (Bad Request)
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }

@@ -20,5 +20,5 @@ public class TripResponse {
     private Long barcoId;
     private String patronName; // Nombre del patrón
     private Long patronId;
-
+    private String shipMatricula;
 }
