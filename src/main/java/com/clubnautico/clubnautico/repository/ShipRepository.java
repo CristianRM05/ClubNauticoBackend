@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 @Repository
 public interface ShipRepository extends JpaRepository<Ship, Long> {
-    List<Ship> findByPropietarioId(Long propietarioId); // Buscar barcos por el ID del propietario
+    List<Ship> findByPropietarioId(Long propietarioId);
 }

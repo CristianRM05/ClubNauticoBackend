@@ -41,23 +41,17 @@ public class TripService {
     @Transactional
     public TripResponse createTrip(TripRequest request) {
         User usuarioActual = getAuthenticateUser();
-
-        // Verificar si el usuario es un miembro (ya lo tienes)
         if (usuarioActual.getRole() != Role.MEMBER) {
             throw new GlobalEcxception("Solo los miembros pueden crear viajes");
         }
 
-        // Buscar el barco
         Ship barco = shipRepository.findById(request.getShipId())
                 .orElseThrow(() -> new GlobalEcxception("Barco no encontrado"));
 
-        // Verificar si el barco ya tiene un viaje en curso (pendiente o aceptado)
         boolean hasOngoingTrip = tripRepository.existsByBarcoAndTripRoleNot(barco, TripRole.FINISHED);
         if (hasOngoingTrip) {
             throw new GlobalEcxception("Este barco ya tiene un viaje en curso que no ha terminado.");
         }
-
-        // Validación del patrón (si aplica)
         User patron = null;
         if (request.getPatronId() != null) {
             patron = userRepository.findById(request.getPatronId())
@@ -67,7 +61,6 @@ public class TripService {
             }
         }
 
-        // Crear el viaje
         Trip trip = Trip.builder()
                 .fechayHora(request.getFechayHora())
                 .descripcion(request.getDescription())
@@ -82,7 +75,7 @@ public class TripService {
     }
 
     public List<TripResponse> getAllTrips() {
-        User usuarioActual = getAuthenticateUser(); // Obtener usuario autenticado
+        User usuarioActual = getAuthenticateUser();
 
         return tripRepository.findByOrganizadorId(usuarioActual).stream()
                 .map(this::toResponse)
@@ -138,7 +131,6 @@ public class TripService {
             throw new GlobalEcxception("El viaje ya ha sido finalizado y no puede ser actualizado.");
         }
 
-        // Actualizar los campos permitidos
         trip.setFechayHora(request.getFechayHora());
         trip.setDescripcion(request.getDescription());
 
@@ -148,7 +140,6 @@ public class TripService {
             trip.setBarco(barco);
         }
 
-        // Guardar los cambios
         Trip updatedTrip = tripRepository.save(trip);
 
         return toResponse(updatedTrip);
@@ -156,29 +147,22 @@ public class TripService {
 
     @Transactional
     public TripResponse updateTripOrganizador(Long idTrip, Long idPatron) {
-        // Buscar el viaje por ID
         Trip trip = tripRepository.findById(idTrip)
                 .orElseThrow(() -> new GlobalEcxception("Viaje no encontrado con ID: " + idTrip));
 
-        // Verificar si ya está finalizado
         if (trip.getTripRole() == TripRole.FINISHED) {
             throw new GlobalEcxception("El viaje ya ha sido finalizado.");
         }
-
-        // Buscar el patrón por ID
         User patron = userRepository.findById(idPatron)
                 .orElseThrow(() -> new GlobalEcxception("Patrón no encontrado con ID: " + idPatron));
 
-        // Verificar si el usuario es realmente un patrón
         if (!patron.isEsPatron()) {
             throw new GlobalEcxception("El usuario seleccionado no es un patrón.");
         }
 
-        // Asignar el patrón al viaje y cambiar el estado a FINALIZADO
         trip.setPatron(patron);
         trip.setTripRole(TripRole.FINISHED);
 
-        // Guardar los cambios
         Trip updatedTrip = tripRepository.save(trip);
 
         return toResponse(updatedTrip);

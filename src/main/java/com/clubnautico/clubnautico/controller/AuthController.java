@@ -29,6 +29,7 @@ public class AuthController {
     private final JwtService jwtService;
     @Autowired
     private final UserService userService;
+
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.register(request));
