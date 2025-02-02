@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -19,6 +22,7 @@ public class UserService {
                 .orElseThrow(() -> new GlobalEcxception("Usuario no encontrado"));
 
         return new UserResponse(
+                user.getId(),
                 user.getName(),
                 user.getLastname(),
                 user.getUsername(),
@@ -44,6 +48,19 @@ public class UserService {
         user.setUsername(updatedUser.getUsername());
 
         repository.save(user);
-        return new UserResponse(user.getName(), user.getLastname(), user.getUsername(), user.getRole(), user.isEsPatron());
+        return new UserResponse(user.getId(),user.getName(), user.getLastname(), user.getUsername(), user.getRole(), user.isEsPatron());
     }
+    public List<UserResponse> getPatrons() {
+        return repository.findByEsPatronTrue().stream()
+                .map(user -> new UserResponse(
+                        user.getId(),
+                        user.getName(),
+                        user.getLastname(),
+                        user.getUsername(),
+                        user.getRole(),
+                        user.isEsPatron()
+                ))
+                .collect(Collectors.toList());
+    }
+
 }

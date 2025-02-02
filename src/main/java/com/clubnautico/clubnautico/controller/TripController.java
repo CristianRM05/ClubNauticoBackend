@@ -52,6 +52,12 @@ public class TripController {
         List<TripResponse> trips = tripService.getALL();
         return ResponseEntity.ok(trips);
     }
+    @PutMapping("/updateOrganizador/{idTrip}/{idPatron}")
+    public ResponseEntity<TripResponse> updateTripOrganizador(
+            @PathVariable Long idTrip, @PathVariable Long idPatron) {
+        return ResponseEntity.ok(tripService.updateTripOrganizador(idTrip, idPatron));
+    }
+
 
 
 }

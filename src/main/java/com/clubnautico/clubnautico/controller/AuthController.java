@@ -2,9 +2,11 @@ package com.clubnautico.clubnautico.controller;
 
 import com.clubnautico.clubnautico.Config.JwtService;
 import com.clubnautico.clubnautico.Service.AauthService;
+import com.clubnautico.clubnautico.Service.UserService;
 import com.clubnautico.clubnautico.controller.Models.AuthResponse;
 import com.clubnautico.clubnautico.controller.Models.AuthenticateRequest;
 import com.clubnautico.clubnautico.controller.Models.RegisterRequest;
+import com.clubnautico.clubnautico.controller.Models.UserResponse;
 import com.clubnautico.clubnautico.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,7 +27,8 @@ public class AuthController {
     private AauthService authService;
     @Autowired
     private final JwtService jwtService;
-
+    @Autowired
+    private final UserService userService;
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(authService.register(request));
@@ -44,7 +48,10 @@ public class AuthController {
             return ResponseEntity.ok(false);
         }
     }
-
+    @GetMapping("/patrons")
+    public ResponseEntity<List<UserResponse>> getPatrons() {
+        return ResponseEntity.ok(userService.getPatrons());
+    }
 
 
 

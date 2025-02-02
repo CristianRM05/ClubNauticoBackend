@@ -154,6 +154,37 @@ public class TripService {
         return toResponse(updatedTrip);
     }
 
+    @Transactional
+    public TripResponse updateTripOrganizador(Long idTrip, Long idPatron) {
+        // Buscar el viaje por ID
+        Trip trip = tripRepository.findById(idTrip)
+                .orElseThrow(() -> new GlobalEcxception("Viaje no encontrado con ID: " + idTrip));
+
+        // Verificar si ya está finalizado
+        if (trip.getTripRole() == TripRole.FINISHED) {
+            throw new GlobalEcxception("El viaje ya ha sido finalizado.");
+        }
+
+        // Buscar el patrón por ID
+        User patron = userRepository.findById(idPatron)
+                .orElseThrow(() -> new GlobalEcxception("Patrón no encontrado con ID: " + idPatron));
+
+        // Verificar si el usuario es realmente un patrón
+        if (!patron.isEsPatron()) {
+            throw new GlobalEcxception("El usuario seleccionado no es un patrón.");
+        }
+
+        // Asignar el patrón al viaje y cambiar el estado a FINALIZADO
+        trip.setPatron(patron);
+        trip.setTripRole(TripRole.FINISHED);
+
+        // Guardar los cambios
+        Trip updatedTrip = tripRepository.save(trip);
+
+        return toResponse(updatedTrip);
+    }
+
+
 
 
 

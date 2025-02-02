@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -23,4 +25,9 @@ public class UserController {
     public ResponseEntity<UserResponse> updateAuthenticatedUser(@RequestBody UserResponse updatedUser) {
         return ResponseEntity.ok(userService.updateAuthenticatedUser(updatedUser));
     }
+    @GetMapping("/patrons")
+    public ResponseEntity<List<UserResponse>> getPatrons() {
+        return ResponseEntity.ok(userService.getPatrons());
+    }
+
 }
