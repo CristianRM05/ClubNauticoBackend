@@ -47,4 +47,11 @@ public class TripController {
         return tripService.updateTrip(id, request);
     }
 
+    @GetMapping("/pending")
+    public ResponseEntity<List<TripResponse>> getAllPendingTrips() {
+        List<TripResponse> trips = tripService.getALL();
+        return ResponseEntity.ok(trips);
+    }
+
+
 }

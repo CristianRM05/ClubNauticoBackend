@@ -89,13 +89,12 @@ public class TripService {
                 .collect(Collectors.toList());
     }
 
-    public TripResponse getALL() {
+    public List<TripResponse> getALL() {
         TripRole role = TripRole.PENDING;
-        Trip trip = (Trip) tripRepository.findByTripRole(role);
-
-
-        return toResponse(trip);
+        List<Trip> trips = tripRepository.findByTripRole(role);
+        return trips.stream().map(this::toResponse).collect(Collectors.toList());
     }
+
 
     public Trip getTripById(Long id) {
         return tripRepository.findById(id)
